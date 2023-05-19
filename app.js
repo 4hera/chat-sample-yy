@@ -1,8 +1,3 @@
-const serialport = require("./serialport");
-/*
-
-*/
-
 const express = require('express')
 var cors = require('cors')
 const app = express();
@@ -30,9 +25,7 @@ io.on('connection', (socket) => {
     });
     socket.on('get-ports', (data) => {
         console.log(`get-ports fired`, data);
-        serialport.getPorts(ports => {
-            socket.emit('get-ports-data', { ports: ports });
-        })
+
     });
     socket.on('send-message-broadcast', (data) => {
         console.log(`send-message fired`, data);
