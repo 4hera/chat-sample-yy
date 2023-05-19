@@ -28,6 +28,7 @@ function sendMessage() {
         message: message,
         socket_id: socket.id
     });
+    document.getElementById("chat-message").value = "";
 }
 var input = document.getElementById("chat-message");
 input.addEventListener("keypress", function(event) {
