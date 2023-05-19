@@ -1,3 +1,4 @@
+const path = require('path')
 const express = require('express')
 var cors = require('cors')
 const app = express();
@@ -8,30 +9,39 @@ const { Server } = require("socket.io");
 const io = new Server(server);
 
 app.use(cors())
-
+app.use(express.static(path.join(__dirname + '/www')));
 app.get('/*', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
+    res.sendFile(path.join(__dirname + '/www/index.html'));
 });
 server.listen(PORT, () => {
     console.log(`app listening on ${PORT}`)
 });
+var messages = [];
 io.on('connection', (socket) => {
     var address = socket.request.connection.remoteAddress;
-    console.log(`${address} a user connected`);
-    console.log(`user id ${socket.id}`);
+    //  console.log(`${address} a user connected`);
+    // console.log(`user id ${socket.id}`);
     socket.join("chat-room");
     socket.on('disconnect', () => {
-        console.log(`${address} user disconnected`);
+        //    console.log(` disconnected user id ${socket.id}`);
+        messages.forEach(element => {
+            if (element.socket_id == socket.id) {
+                element.isLive = false;
+            }
+        });
+        io.to("chat-room").emit('chat-history', { chat_history: messages });
+        //  console.log(`${address} user disconnected`);
     });
-    socket.on('get-ports', (data) => {
-        console.log(`get-ports fired`, data);
 
-    });
     socket.on('send-message-broadcast', (data) => {
-        console.log(`send-message fired`, data);
-        //socket.emit('send-message', { message: new Date().toISOString() });
+        const time = new Date();
+        data.timestamp = time.getHours() + ":" + time.getMinutes();
+        data.isLive = true;
+        messages = [...messages, data];
         io.to("chat-room").emit('send-message-broadcast', {...data });
-        io.to("chat-room").emit('send-message', { message: new Date().toISOString() });
+    });
+    socket.on('chat-history', (data) => {
+        socket.emit('chat-history', { chat_history: messages });
     });
 });
 
