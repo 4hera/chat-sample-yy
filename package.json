@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "@serialport/bindings-cpp": "^11.0.1",
+    "arp-find-ip": "^1.0.0",
+    "axios": "^1.4.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "johnny-five": "^2.1.0",
+    "local-devices": "^4.0.0",
+    "socket.io": "^4.6.1"
+  }
+}

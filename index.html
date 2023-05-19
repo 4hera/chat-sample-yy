@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socket IO - Example</title>
+</head>
+
+<body>
+    <div>
+        <input type="text" id="chat-username" placeholder="username" />
+        <input type="text" id="chat-message" placeholder="message" />
+        <button onclick="sendMessage()">send message</button>
+    </div>
+    <pre id="message-area"></pre>
+
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script>
+        var socket = io(window.location.origin, {
+            transports: ["websocket", "polling"],
+            rejectUnauthorized: false,
+            reconnection: true,
+            reconnectionDelay: 1000,
+            reconnectionDelayMax: 5000
+        });
+        socket.on("connect", () => {
+            console.log(socket.id)
+            console.log("client connected to server ! yeeee")
+        })
+        socket.on("get-ports-data", (data) => {
+            document.getElementById("message-area").textContent = JSON.stringify(data, null, 4);
+        })
+
+
+        function sendMessage() {
+            var message = document.getElementById("chat-message").value;
+            var username = document.getElementById("chat-username").value;
+            socket.emit("send-message-broadcast", {
+                username: username,
+                message: message,
+                socket_id: socket.id
+            });
+        }
+        var input = document.getElementById("chat-message");
+        input.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                sendMessage();
+            }
+        });
+        socket.on("send-message", (data) => {
+            document.getElementById("message-area").textContent += `server: ${data.message} \r\n`;
+        })
+        socket.on("send-message-broadcast", (data) => {
+            document.getElementById("message-area").textContent += `${data.username}: ${data.message} \r\n`;
+        })
+    </script>
+</body>
+
+</html>
