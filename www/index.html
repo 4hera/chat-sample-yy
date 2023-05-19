@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Socket IO - Example</title>
+    <title>Yeni Yazılımcı Socket IO - Example</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -18,10 +18,14 @@
     </div>
     <pre id="message-area"></pre>
 -->
-    <section class="msger" id="app">
+    <section class="msger" id="app" v-cloak>
         <header class="msger-header">
             <div class="msger-header-title">
                 <i class="fas fa-comment-alt"></i> Yeni Yazılımcı Sohbet
+
+            </div>
+            <div class="msger-username" style="width:300px">
+                <input type="text" class="msger-input" id="chat-username" placeholder="Kullanıcı Adı">
             </div>
         </header>
 
@@ -61,7 +65,6 @@
         </main>
 
         <div class="msger-inputarea">
-            <input type="text" class="msger-input" id="chat-username" placeholder="Kullanıcı Adı">
             <input type="text" class="msger-input" id="chat-message" placeholder="Mesajını yaz dostum....">
             <button type="button" onclick="sendMessage()" class="msger-send-btn">Gönder</button>
         </div>

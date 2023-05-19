@@ -18,6 +18,10 @@ html {
     box-sizing: inherit
 }
 
+[v-cloak]>* {
+    display: none
+}
+
 body {
     display: flex;
     justify-content: center;
@@ -48,6 +52,10 @@ body {
     border-bottom: var(--border);
     background: #eee;
     color: #666
+}
+
+.msger-header-title {
+    margin-top: 1rem
 }
 
 .msger-chat {
@@ -183,4 +191,16 @@ body {
     border-radius: 50%;
     position: relative;
     background-color: red
+}
+
+.msger-username {
+    display: flex;
+    background: #eee
+}
+
+.msger-username * {
+    padding: 10px;
+    border: none;
+    border-radius: 3px;
+    font-size: 1em
 }

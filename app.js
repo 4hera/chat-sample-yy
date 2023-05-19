@@ -44,15 +44,3 @@ io.on('connection', (socket) => {
         socket.emit('chat-history', { chat_history: messages });
     });
 });
-
-
-/*
-    client ---> ...... (408 timeout=30s)
-                            server (... 5. usb takıldı)
-                    200 <--- port eklendi.
-    client ---> ...... (408 timeout=30s)
-                          server (... 30 sn geçti)
-                    408 <--- port eklendi.
-    client ---> ...... (408 timeout=30s)                
-
-*/

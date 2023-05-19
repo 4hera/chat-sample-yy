@@ -5,8 +5,8 @@ var app = new Vue({
         message: 'Hello Vue!'
     }
 })
-document.getElementById("chat-username").value = localStorage.getItem("yy_username") || "";
 
+document.getElementById("chat-username").value = localStorage.getItem("yy_username") || `anonim-${Math.random().toString(36).slice(-6)}`;
 var socket = io(window.location.origin, {
     transports: ["websocket", "polling"],
     rejectUnauthorized: false,
@@ -38,6 +38,9 @@ input.addEventListener("keypress", function(event) {
 socket.on("chat-history", (data) => {
     data.chat_history.forEach(element => {
         element.isClient = false;
+        if (element.socket_id == socket.id) {
+            element.isClient = true;
+        }
     });
     app.chat_messages = data.chat_history;
 });
