@@ -22,12 +22,15 @@
         <header class="msger-header">
             <div class="msger-header-title">
                 <i class="fas fa-comment-alt"></i> Yeni Yazılımcı Sohbet
-
+            </div>
+            <div class="msger-header-online" v-cloak>
+                <i class="fas fa-users" style="color:#00c441;"></i> {{online_users}} kullanıcı aktif <em>{{typing}}</em>
             </div>
             <div class="msger-username" style="width:300px">
-                <input type="text" class="msger-input" id="chat-username" placeholder="Kullanıcı Adı">
+                <input type="text" class="msger-input" style="margin: 2px!important;" id="chat-username" placeholder="Kullanıcı Adı">
             </div>
         </header>
+
 
         <main class="msger-chat">
             <div v-for="chat in chat_messages">
@@ -61,9 +64,7 @@
                     </div>
                 </div>
             </div>
-
         </main>
-
         <div class="msger-inputarea">
             <input type="text" class="msger-input" id="chat-message" placeholder="Mesajını yaz dostum....">
             <button type="button" onclick="sendMessage()" class="msger-send-btn">Gönder</button>

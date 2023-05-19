@@ -17,25 +17,37 @@ server.listen(PORT, () => {
     console.log(`app listening on ${PORT}`)
 });
 var messages = [];
+
+function getDateTime() {
+    let d = Date.now();
+    let ho = new Intl.DateTimeFormat("tr-TR", {
+        hour: "2-digit",
+        hour12: false,
+    }).format(d);
+    let mi = new Intl.DateTimeFormat("tr-TR", { minute: "2-digit" }).format(d);
+
+    return ho + ":" + mi.padStart(2, '0');
+}
 io.on('connection', (socket) => {
-    var address = socket.request.connection.remoteAddress;
-    //  console.log(`${address} a user connected`);
-    // console.log(`user id ${socket.id}`);
     socket.join("chat-room");
+    io.in("chat-room").fetchSockets().then(sockets => {
+        io.to("chat-room").emit('online-users', { count: sockets.length });
+    });
     socket.on('disconnect', () => {
-        //    console.log(` disconnected user id ${socket.id}`);
+        socket.leave("chat-room")
         messages.forEach(element => {
             if (element.socket_id == socket.id) {
                 element.isLive = false;
             }
         });
         io.to("chat-room").emit('chat-history', { chat_history: messages });
-        //  console.log(`${address} user disconnected`);
+        io.in("chat-room").fetchSockets().then(sockets => {
+            io.to("chat-room").emit('online-users', { count: sockets.length });
+        });
     });
-
     socket.on('send-message-broadcast', (data) => {
         const time = new Date();
-        data.timestamp = time.getHours() + ":" + time.getMinutes();
+        data.timestamp = getDateTime();
         data.isLive = true;
         messages = [...messages, data];
         io.to("chat-room").emit('send-message-broadcast', {...data });
@@ -43,4 +55,11 @@ io.on('connection', (socket) => {
     socket.on('chat-history', (data) => {
         socket.emit('chat-history', { chat_history: messages });
     });
+    socket.on('typing', (data) => {
+        if (data.typing == true) {
+            io.to("chat-room").emit('display', data)
+        } else {
+            io.to("chat-room").emit('display', data)
+        }
+    })
 });
